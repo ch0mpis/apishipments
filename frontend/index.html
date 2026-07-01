@@ -56,6 +56,18 @@
         <section id="detail-section" class="page">
             <h2>Detalle del envío</h2>
             <div id="detail-content"></div>
+
+            <div id="update-estado-box">
+                <label for="estado-select">Actualizar estado:</label>
+                <select id="estado-select">
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en_transito">En tránsito</option>
+                    <option value="entregado">Entregado</option>
+                    <option value="cancelado">Cancelado</option>
+                </select>
+                <button id="update-estado-btn">Actualizar</button>
+            </div>
+
             <button id="close-detail">Volver al listado</button>
         </section>
     </main>

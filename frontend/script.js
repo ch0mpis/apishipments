@@ -1,4 +1,5 @@
 const API_URL = "http://127.0.0.1:8000";
+let currentShipmentId = null;
 
 const navButtons = document.querySelectorAll(".nav-btn");
 const pages = document.querySelectorAll(".page");
@@ -93,6 +94,29 @@ async function verDetalle(id) {
         <p><strong>Creado:</strong> <span class="valor">${formatearFecha(envio.fecha_creacion)}</span></p>
         <p><strong>Actualizado:</strong> <span class="valor">${formatearFecha(envio.fecha_actualizacion)}</span></p>
 `;
+
+    currentShipmentId = id;
+        document.getElementById("estado-select").value = envio.estado;
+
+// Actualizar Detalles 
+document.getElementById("update-estado-btn").addEventListener("click", async () => {
+    const nuevoEstado = document.getElementById("estado-select").value;
+
+    const response = await fetch(`${API_URL}/shipments/${currentShipmentId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ estado: nuevoEstado })
+    });
+
+    if (response.ok) {
+        alert("Estado actualizado con éxito");
+        document.querySelector('[data-section="list-section"]').click();
+    } else {
+        alert("Error al actualizar el estado");
+    }
+});
+
+
 
     navButtons.forEach(b => b.classList.remove("active"));
     pages.forEach(p => p.classList.remove("active"));
