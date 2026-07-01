@@ -8,8 +8,8 @@ Este proyecto permite registrar el envío de un paquete entre dos puntos, consul
 
 El proyecto está compuesto por dos partes independientes que se comunican entre sí:
 
-- Un **backend** que expone una API REST, encargado de la lógica de negocio y la persistencia de los datos.
-- Un **frontend** que consume esa API y ofrece una interfaz visual para interactuar con los envíos sin necesidad de herramientas técnicas como Postman o Swagger.
+* Un **backend** que expone una API REST, encargado de la lógica de negocio y la persistencia de los datos.
+* Un **frontend** que consume esa API y ofrece una interfaz visual para interactuar con los envíos sin necesidad de herramientas técnicas como Postman o Swagger.
 
 ## 2. Tecnologías utilizadas
 
@@ -48,14 +48,14 @@ apishipments/
 
 Antes de instalar el proyecto, verifica tener disponible en tu equipo:
 
-- **Python 3.10 o superior** instalado y accesible desde la terminal.
+* **Python 3.10 o superior** instalado y accesible desde la terminal.
   Verifica con:
   ```bash
   python --version
   ```
-- **pip** (gestor de paquetes de Python, normalmente viene incluido con Python).
-- **Git**, para clonar el repositorio.
-- Un **navegador web moderno** (Chrome, Firefox, Edge) para el frontend.
+* **pip** (gestor de paquetes de Python, normalmente viene incluido con Python).
+* **Git**, para clonar el repositorio.
+* Un **navegador web moderno** (Chrome, Firefox, Edge) para el frontend.
 
 No se requiere instalar ningún motor de base de datos por separado: el proyecto usa SQLite, que funciona como un archivo local y no necesita configuración adicional.
 
@@ -105,7 +105,7 @@ Esto instalará, entre otras: `fastapi`, `uvicorn`, `sqlalchemy`, `pydantic`.
 Desde la carpeta raíz del proyecto (`apishipments/`, donde está la carpeta `app/`), ejecuta:
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn app.main:app
 ```
 
 Si todo está correctamente configurado, verás en la terminal un mensaje similar a:
@@ -116,7 +116,6 @@ INFO:     Application startup complete.
 
 En este punto, el servidor ya está corriendo y disponible en `http://127.0.0.1:8000`. Además, se generará automáticamente un archivo `kargoru.db` en la raíz del proyecto — esa es la base de datos SQLite, creada la primera vez que se levanta la aplicación.
 
-> El flag `--reload` reinicia el servidor automáticamente cada vez que se detecta un cambio en el código, útil durante el desarrollo.
 
 ### 5.6. Verificar que el backend funciona
 
@@ -213,25 +212,18 @@ La navegación entre secciones ocurre sin recargar la página (patrón de págin
 
 ## 9. Decisiones técnicas
 
-- **FastAPI** fue seleccionado sobre las demás opciones aceptadas por el enunciado (Flask, Spring Boot) debido a su integración nativa con Pydantic para validación de datos, la generación automática de documentación Swagger sin configuración adicional, y su curva de aprendizaje más directa para el alcance de esta prueba.
+* **FastAPI** fue seleccionado sobre las demás opciones aceptadas por el enunciado (Flask, Spring Boot) debido a su integración nativa con Pydantic para validación de datos, la generación automática de documentación Swagger sin configuración adicional.
 
-- **SQLite** se eligió como motor de base de datos por no requerir instalación ni configuración de un servidor externo, permitiendo que cualquier evaluador clone el repositorio y lo ejecute de inmediato sin pasos adicionales de infraestructura.
+* **SQLite** se eligió como motor de base de datos por no requerir instalación ni configuración de un servidor externo, permitiendo que cualquiera clone el repositorio y lo ejecute de inmediato sin pasos adicionales de infraestructura.
 
-- **Separación entre modelos y schemas**: los modelos de SQLAlchemy (`models.py`) representan la estructura de la base de datos, mientras que los schemas de Pydantic (`schemas.py`) representan los datos que entran y salen por la API. Esta separación permite, por ejemplo, que el endpoint de actualización (`PATCH`) acepte modificaciones parciales sin exigir todos los campos del envío.
+* **Separación entre modelos y schemas**: los modelos de SQLAlchemy (`models.py`) representan la estructura de la base de datos, mientras que los schemas de Pydantic (`schemas.py`) representan los datos que entran y salen por la API. Esta separación permite, por ejemplo, que el endpoint de actualización (`PATCH`) acepte modificaciones parciales sin exigir todos los campos del envío.
 
-- **Identificadores UUID**: se utilizó `uuid4()` en lugar de un identificador numérico autoincremental, evitando IDs predecibles y facilitando una eventual migración a un sistema distribuido.
+* **Identificadores UUID**: se utilizó `uuid4()` en lugar de un identificador numérico autoincremental, evitando IDs predecibles y facilitando una eventual migración a un sistema distribuido.
 
-- **Frontend sin framework**: dado que el enunciado de la prueba indica explícitamente que no se evalúa diseño gráfico avanzado, se optó por HTML, CSS y JavaScript sin dependencias externas, priorizando una integración clara y directa con la API mediante `fetch()`.
+* **Frontend sin framework**: se optó por HTML, CSS y JavaScript sin dependencias externas, priorizando una integración clara y directa con la API mediante `fetch()`.
 
-- **Fechas en UTC con conversión en el cliente**: la base de datos almacena las fechas en UTC (estándar para evitar ambigüedades entre zonas horarias); la conversión a la hora local del usuario se realiza en el frontend al momento de mostrar la información.
+* **Fechas en UTC con conversión en el cliente**: la base de datos almacena las fechas en UTC (estándar para evitar ambigüedades entre zonas horarias); la conversión a la hora local del usuario se realiza en el frontend al momento de mostrar la información.
 
-## 10. Posibles mejoras futuras
+## 10. Autor
 
-- Filtros por estado y fecha en el listado de envíos (mencionados como plus en el enunciado).
-- Autenticación de usuarios para restringir el acceso a la API.
-- Exportación de la colección de endpoints a Postman.
-- Paginación en el listado para manejar grandes volúmenes de envíos.
-
-## 11. Autor
-
-Proyecto desarrollado como parte del proceso de selección de Kargoru SAS.
+Proyecto desarrollado como parte del proceso de selección de Kargoru SAS | Juan Pablo Buitrago Naranjo.
