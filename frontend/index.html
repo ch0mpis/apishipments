@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Kargoru - Registro de Envíos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav id="navbar">
+        <span class="logo">Kargoru</span>
+        <div class="nav-links">
+            <button class="nav-btn active" data-section="form-section">Registrar envío</button>
+            <button class="nav-btn" data-section="list-section">Ver envíos</button>
+        </div>
+    </nav>
+
+    <main>
+        <section id="form-section" class="page active">
+            <h2>Registrar nuevo envío</h2>
+            <form id="shipment-form">
+                <input type="text" id="origen" placeholder="Origen" required>
+                <input type="text" id="destino" placeholder="Destino" required>
+                <input type="text" id="remitente" placeholder="Remitente" required>
+                <input type="text" id="destinatario" placeholder="Destinatario" required>
+                <input type="number" id="peso_kg" placeholder="Peso (kg)" step="0.1" min="0.1" required>
+                <textarea id="descripcion" placeholder="Descripción (opcional)"></textarea>
+                <button type="submit">Registrar envío</button>
+            </form>
+        </section>
+
+        <section id="list-section" class="page">
+            <h2>Envíos registrados</h2>
+            <table id="shipments-table">
+                <thead>
+                    <tr>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="shipments-body"></tbody>
+            </table>
+        </section>
+
+        <section id="detail-section" class="page">
+            <h2>Detalle del envío</h2>
+            <div id="detail-content"></div>
+            <button id="close-detail">Volver al listado</button>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
