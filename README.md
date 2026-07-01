@@ -1,15 +1,15 @@
 # Kargoru API — Sistema de Registro de Envíos de Paquetes
 
-**Prueba Técnica — Kargoru SAS**
+**Prueba Técnica     — Kargoru SAS**
 
 ## 1. Descripción del proyecto
 
-Este proyecto permite registrar el envío de un paquete entre dos puntos, consultar su estado, actualizarlo a lo largo de su ciclo de vida (pendiente → en tránsito → entregado, o cancelado), y eliminarlo del sistema.
+Permite registrar el envío de un paquete entre dos puntos, consultar su estado, actualizarlo a lo largo de su ciclo de vida (pendiente → en tránsito → entregado, o cancelado), y eliminarlo del sistema.
 
 El proyecto está compuesto por dos partes independientes que se comunican entre sí:
 
-* Un **backend** que expone una API REST, encargado de la lógica de negocio y la persistencia de los datos.
-* Un **frontend** que consume esa API y ofrece una interfaz visual para interactuar con los envíos sin necesidad de herramientas técnicas como Postman o Swagger.
+- Un **backend** que expone una API REST, encargado de la lógica de negocio y la persistencia de los datos.
+- Un **frontend** que consume esa API y ofrece una interfaz visual para interactuar con los envíos sin necesidad de herramientas técnicas como Postman o Swagger.
 
 ## 2. Tecnologías utilizadas
 
@@ -48,14 +48,14 @@ apishipments/
 
 Antes de instalar el proyecto, verifica tener disponible en tu equipo:
 
-* **Python 3.10 o superior** instalado y accesible desde la terminal.
+- **Python 3.10 o superior** instalado y accesible desde la terminal.
   Verifica con:
   ```bash
   python --version
   ```
-* **pip** (gestor de paquetes de Python, normalmente viene incluido con Python).
-* **Git**, para clonar el repositorio.
-* Un **navegador web moderno** (Chrome, Firefox, Edge) para el frontend.
+- **pip** (gestor de paquetes de Python, normalmente viene incluido con Python).
+- **Git**, para clonar el repositorio.
+- Un **navegador web moderno** (Chrome, Firefox, Edge) para el frontend.
 
 No se requiere instalar ningún motor de base de datos por separado: el proyecto usa SQLite, que funciona como un archivo local y no necesita configuración adicional.
 
@@ -64,7 +64,7 @@ No se requiere instalar ningún motor de base de datos por separado: el proyecto
 ### 5.1. Clonar el repositorio
 
 ```bash
-git clone <URL-del-repositorio>
+git clone <https://github.com/ch0mpis/apishipments.git>
 cd apishipments
 ```
 
@@ -105,7 +105,7 @@ Esto instalará, entre otras: `fastapi`, `uvicorn`, `sqlalchemy`, `pydantic`.
 Desde la carpeta raíz del proyecto (`apishipments/`, donde está la carpeta `app/`), ejecuta:
 
 ```bash
-uvicorn app.main:app
+uvicorn app.main:app --reload
 ```
 
 Si todo está correctamente configurado, verás en la terminal un mensaje similar a:
@@ -116,6 +116,7 @@ INFO:     Application startup complete.
 
 En este punto, el servidor ya está corriendo y disponible en `http://127.0.0.1:8000`. Además, se generará automáticamente un archivo `kargoru.db` en la raíz del proyecto — esa es la base de datos SQLite, creada la primera vez que se levanta la aplicación.
 
+> 
 
 ### 5.6. Verificar que el backend funciona
 
@@ -133,9 +134,22 @@ Desde ahí puedes probar cada uno de los endpoints directamente, sin necesidad d
 
 ### 5.7. Ejecutar el frontend
 
-Con el backend corriendo, abre el archivo `frontend/index.html` directamente en tu navegador (doble clic sobre el archivo, o arrastrándolo a una pestaña nueva).
+Con el backend corriendo, el frontend se sirve mediante un servidor local simple. Abre una **nueva terminal** (dejando la del backend activa) y ejecuta:
 
-> **Importante:** el backend debe estar corriendo antes de abrir el frontend, ya que este último realiza peticiones HTTP hacia `http://127.0.0.1:8000` para funcionar.
+```bash
+cd frontend
+python -m http.server 5500 --bind 127.0.0.1
+```
+
+> El flag `--bind 127.0.0.1` es necesario en versiones recientes de Python (3.13+), ya que por defecto el servidor puede intentar escuchar en una dirección IPv6 en lugar de IPv4, lo que impediría acceder correctamente desde el navegador.
+
+Luego abre en el navegador:
+```
+http://127.0.0.1:5500
+```
+
+
+> **Importante:** el backend debe estar corriendo (paso 5.5) antes de acceder al frontend, ya que este último realiza peticiones HTTP hacia `http://127.0.0.1:8000` para funcionar. Es necesario mantener ambos servidores (backend y frontend) corriendo simultáneamente en terminales separadas.
 
 ## 6. Variables de entorno
 
@@ -212,17 +226,18 @@ La navegación entre secciones ocurre sin recargar la página (patrón de págin
 
 ## 9. Decisiones técnicas
 
-* **FastAPI** fue seleccionado sobre las demás opciones aceptadas por el enunciado (Flask, Spring Boot) debido a su integración nativa con Pydantic para validación de datos, la generación automática de documentación Swagger sin configuración adicional.
+- **FastAPI** fue seleccionado sobre las demás opciones aceptadas por el enunciado (Flask, Spring Boot) debido a su integración nativa con Pydantic para validación de datos, la generación automática de documentación Swagger sin configuración adicional, y su curva de aprendizaje más directa para el alcance de esta prueba.
 
-* **SQLite** se eligió como motor de base de datos por no requerir instalación ni configuración de un servidor externo, permitiendo que cualquiera clone el repositorio y lo ejecute de inmediato sin pasos adicionales de infraestructura.
+- **SQLite** se eligió como motor de base de datos por no requerir instalación ni configuración de un servidor externo, permitiendo que cualquier evaluador clone el repositorio y lo ejecute de inmediato sin pasos adicionales de infraestructura.
 
-* **Separación entre modelos y schemas**: los modelos de SQLAlchemy (`models.py`) representan la estructura de la base de datos, mientras que los schemas de Pydantic (`schemas.py`) representan los datos que entran y salen por la API. Esta separación permite, por ejemplo, que el endpoint de actualización (`PATCH`) acepte modificaciones parciales sin exigir todos los campos del envío.
+- **Separación entre modelos y schemas**: los modelos de SQLAlchemy (`models.py`) representan la estructura de la base de datos, mientras que los schemas de Pydantic (`schemas.py`) representan los datos que entran y salen por la API. Esta separación permite, por ejemplo, que el endpoint de actualización (`PATCH`) acepte modificaciones parciales sin exigir todos los campos del envío.
 
-* **Identificadores UUID**: se utilizó `uuid4()` en lugar de un identificador numérico autoincremental, evitando IDs predecibles y facilitando una eventual migración a un sistema distribuido.
+- **Identificadores UUID**: se utilizó `uuid4()` en lugar de un identificador numérico autoincremental, evitando IDs predecibles y facilitando una eventual migración a un sistema distribuido.
 
-* **Frontend sin framework**: se optó por HTML, CSS y JavaScript sin dependencias externas, priorizando una integración clara y directa con la API mediante `fetch()`.
+- **Frontend sin framework**: Se optó por HTML, CSS y JavaScript sin dependencias externas, priorizando una integración clara y directa con la API mediante `fetch()`.
 
-* **Fechas en UTC con conversión en el cliente**: la base de datos almacena las fechas en UTC (estándar para evitar ambigüedades entre zonas horarias); la conversión a la hora local del usuario se realiza en el frontend al momento de mostrar la información.
+- **Fechas en UTC con conversión en el cliente**: la base de datos almacena las fechas en UTC (estándar para evitar ambigüedades entre zonas horarias); la conversión a la hora local del usuario se realiza en el frontend al momento de mostrar la información.
+
 
 ## 10. Autor
 
