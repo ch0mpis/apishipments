@@ -18,6 +18,11 @@ navButtons.forEach(btn => {
     });
 });
 
+function formatearFecha(fechaStr) {
+    const fechaUTC = fechaStr.endsWith("Z") ? fechaStr : fechaStr + "Z";
+    return new Date(fechaUTC).toLocaleString();
+}
+
 const form = document.getElementById("shipment-form");
 
 form.addEventListener("submit", async (event) => {
@@ -56,8 +61,12 @@ async function loadShipments() {
     shipments.forEach(envio => {
         const row = document.createElement("tr");
         row.innerHTML = `
+            <td title="${envio.id}">${envio.id.slice(0, 8)}...</td>
+            <td>${envio.remitente}</td>
+            <td>${envio.destinatario}</td>
             <td>${envio.origen}</td>
             <td>${envio.destino}</td>
+
             <td><span class="estado-badge estado-${envio.estado}">${envio.estado}</span></td>
             <td>
                 <button class="action-btn" onclick="verDetalle('${envio.id}')">Ver</button>
@@ -73,21 +82,38 @@ async function verDetalle(id) {
     const envio = await response.json();
 
     document.getElementById("detail-content").innerHTML = `
-        <p><strong>Origen:</strong> ${envio.origen}</p>
-        <p><strong>Destino:</strong> ${envio.destino}</p>
-        <p><strong>Remitente:</strong> ${envio.remitente}</p>
-        <p><strong>Destinatario:</strong> ${envio.destinatario}</p>
-        <p><strong>Peso:</strong> ${envio.peso_kg} kg</p>
-        <p><strong>Descripción:</strong> ${envio.descripcion || "Sin descripción"}</p>
+        <p><strong>ID:</strong> <span class="valor">${envio.id}</span></p>
+        <p><strong>Origen:</strong> <span class="valor">${envio.origen}</span></p>
+        <p><strong>Destino:</strong> <span class="valor">${envio.destino}</span></p>
+        <p><strong>Remitente:</strong> <span class="valor">${envio.remitente}</span></p>
+        <p><strong>Destinatario:</strong> <span class="valor">${envio.destinatario}</span></p>
+        <p><strong>Peso:</strong> <span class="valor">${envio.peso_kg} kg</span></p>
+        <p><strong>Descripción:</strong> <span class="valor">${envio.descripcion || "Sin descripción"}</span></p>
         <p><strong>Estado:</strong> <span class="estado-badge estado-${envio.estado}">${envio.estado}</span></p>
-        <p><strong>Creado:</strong> ${new Date(envio.fecha_creacion).toLocaleString()}</p>
-        <p><strong>Actualizado:</strong> ${new Date(envio.fecha_actualizacion).toLocaleString()}</p>
-    `;
+        <p><strong>Creado:</strong> <span class="valor">${formatearFecha(envio.fecha_creacion)}</span></p>
+        <p><strong>Actualizado:</strong> <span class="valor">${formatearFecha(envio.fecha_actualizacion)}</span></p>
+`;
 
     navButtons.forEach(b => b.classList.remove("active"));
     pages.forEach(p => p.classList.remove("active"));
     document.getElementById("detail-section").classList.add("active");
 }
+
+document.getElementById("search-btn").addEventListener("click", async () => {
+    const id = document.getElementById("search-id").value.trim();
+    if (!id) {
+        alert("Escribe un ID para buscar");
+        return;
+    }
+
+    const response = await fetch(`${API_URL}/shipments/${id}`);
+
+    if (response.ok) {
+        verDetalle(id);
+    } else {
+        alert("No se encontró ningún envío con ese ID");
+    }
+});
 
 async function eliminarEnvio(id) {
     if (!confirm("¿Seguro que quieres eliminar este envío?")) return;

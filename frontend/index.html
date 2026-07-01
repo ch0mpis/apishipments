@@ -31,9 +31,18 @@
 
         <section id="list-section" class="page">
             <h2>Envíos registrados</h2>
-            <table id="shipments-table">
+
+            <div id="search-box">
+                <input type="text" id="search-id" placeholder="Buscar por ID exacto...">
+                <button id="search-btn">Buscar</button>
+            </div>
+
+    <table id="shipments-table">
                 <thead>
                     <tr>
+                        <th>ID</th>
+                        <th>Remitente</th>
+                        <th>Destinatario</th>
                         <th>Origen</th>
                         <th>Destino</th>
                         <th>Estado</th>
