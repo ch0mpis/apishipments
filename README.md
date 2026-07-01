@@ -226,9 +226,9 @@ La navegación entre secciones ocurre sin recargar la página (patrón de págin
 
 ## 9. Decisiones técnicas
 
-- **FastAPI** fue seleccionado sobre las demás opciones aceptadas por el enunciado (Flask, Spring Boot) debido a su integración nativa con Pydantic para validación de datos, la generación automática de documentación Swagger sin configuración adicional, y su curva de aprendizaje más directa para el alcance de esta prueba.
+- **FastAPI** fue seleccionado sobre las demás opciones aceptadas por el enunciado (Flask, Spring Boot) debido a su integración nativa con Pydantic para validación de datos, la generación automática de documentación Swagger sin configuración adicional.
 
-- **SQLite** se eligió como motor de base de datos por no requerir instalación ni configuración de un servidor externo, permitiendo que cualquier evaluador clone el repositorio y lo ejecute de inmediato sin pasos adicionales de infraestructura.
+- **SQLite** se eligió como motor de base de datos por no requerir instalación ni configuración de un servidor externo, permitiendo que se ejecute de inmediato sin pasos adicionales de infraestructura.
 
 - **Separación entre modelos y schemas**: los modelos de SQLAlchemy (`models.py`) representan la estructura de la base de datos, mientras que los schemas de Pydantic (`schemas.py`) representan los datos que entran y salen por la API. Esta separación permite, por ejemplo, que el endpoint de actualización (`PATCH`) acepte modificaciones parciales sin exigir todos los campos del envío.
 
